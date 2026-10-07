@@ -320,6 +320,13 @@ section:first-child{border-top:none;padding-top:10px}
 }
 .pub h3{font-family:var(--font-display);font-weight:400;font-size:19.5px;line-height:1.36}
 .authors{font-size:14px;color:var(--ink-soft);margin-top:6px}
+.pub h3 a,.news .ttl a{
+  color:inherit;
+  text-decoration:none;
+  border-bottom:1px solid var(--rule);
+  transition:color .18s ease, border-color .18s ease;
+}
+.pub h3 a:hover,.news .ttl a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 .authors em{font-style:normal;color:var(--accent);font-weight:500}
 .venue{font-size:13.5px;color:var(--ink-faint);margin-top:4px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .venue i{font-style:italic}
@@ -526,15 +533,15 @@ footer .zh{font-family:var(--font-body);letter-spacing:.02em}
         <li>
           <div class="stamp">2026.04.29</div>
           <div class="txt">
-            <span class="en"><strong>IJCAI-ECAI 2026</strong> — paper accepted: <span class="ttl">Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</span>, first author.</span>
-            <span class="zh"><strong>IJCAI-ECAI 2026</strong> 论文接收：<span class="ttl">Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</span>，第一作者。</span>
+            <span class="en"><strong>IJCAI-ECAI 2026</strong> — paper accepted: <span class="ttl"><a href="https://www.ijcai.org/proceedings/2026/452" target="_blank" rel="noopener">Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</a></span>, first author.</span>
+            <span class="zh"><strong>IJCAI-ECAI 2026</strong> 论文接收：<span class="ttl"><a href="https://www.ijcai.org/proceedings/2026/452" target="_blank" rel="noopener">Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</a></span>，第一作者。</span>
           </div>
         </li>
         <li>
           <div class="stamp">2026.01.22</div>
           <div class="txt">
-            <span class="en"><strong>AISTATS 2026</strong> — paper accepted: <span class="ttl">ε-Identifiability of Causal Quantities</span>, co-authored with Judea Pearl.</span>
-            <span class="zh"><strong>AISTATS 2026</strong> 论文接收：<span class="ttl">ε-Identifiability of Causal Quantities</span>，合作者含 Judea Pearl。</span>
+            <span class="en"><strong>AISTATS 2026</strong> — paper accepted: <span class="ttl"><a href="https://proceedings.mlr.press/v300/li26j.html" target="_blank" rel="noopener">ε-Identifiability of Causal Quantities</a></span>, co-authored with Judea Pearl.</span>
+            <span class="zh"><strong>AISTATS 2026</strong> 论文接收：<span class="ttl"><a href="https://proceedings.mlr.press/v300/li26j.html" target="_blank" rel="noopener">ε-Identifiability of Causal Quantities</a></span>，合作者含 Judea Pearl。</span>
           </div>
         </li>
       </ul>
@@ -578,7 +585,7 @@ footer .zh{font-family:var(--font-body);letter-spacing:.02em}
         <article class="pub">
           <div class="yr">2026</div>
           <div>
-            <h3>Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</h3>
+            <h3><a href="https://www.ijcai.org/proceedings/2026/452" target="_blank" rel="noopener">Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</a></h3>
             <div class="authors"><em>X. Shu</em>, S. Wang, A. Li</div>
             <div class="venue">
               <i><span class="en">IJCAI-ECAI 2026, pp. 4063–4070</span><span class="zh">IJCAI-ECAI 2026，第 4063–4070 页</span></i>
@@ -590,7 +597,7 @@ footer .zh{font-family:var(--font-body);letter-spacing:.02em}
         <article class="pub">
           <div class="yr">2026</div>
           <div>
-            <h3>ε-Identifiability of Causal Quantities</h3>
+            <h3><a href="https://proceedings.mlr.press/v300/li26j.html" target="_blank" rel="noopener">ε-Identifiability of Causal Quantities</a></h3>
             <div class="authors">A. Li, S. Mueller, <em>X. Shu</em>, J. Pearl</div>
             <div class="venue">
               <i><span class="en">AISTATS 2026, PMLR Vol. 300, pp. 4978–4986</span><span class="zh">AISTATS 2026，PMLR 第 300 卷，第 4978–4986 页</span></i>
