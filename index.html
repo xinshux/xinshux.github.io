@@ -240,11 +240,25 @@ section:first-child{border-top:none;padding-top:10px}
   font-size:28px;
   line-height:1.38;
   letter-spacing:-.012em;
-  max-width:30ch;
-  margin-bottom:22px;
+  max-width:34ch;
+  margin-bottom:24px;
 }
 .lede .zh{font-family:var(--font-body);font-weight:300;font-size:25px;line-height:1.58;letter-spacing:.01em}
-.prose{max-width:64ch;display:flex;flex-direction:column;gap:14px;color:var(--ink-soft);font-size:15.5px}
+.prose{max-width:68ch;display:flex;flex-direction:column;gap:14px;color:var(--ink-soft);font-size:15.5px}
+
+/* Wide screens: set the standfirst beside the body so About fills the column
+   like every other section, instead of stopping two-thirds across. */
+@media (min-width:1000px){
+  .aboutgrid{
+    display:grid;
+    grid-template-columns:minmax(0,0.92fr) minmax(0,1.08fr);
+    gap:54px;
+    align-items:start;
+  }
+  .aboutgrid .lede{max-width:none;margin-bottom:0;font-size:26px}
+  .aboutgrid .lede .zh{font-size:23px}
+  .aboutgrid .prose{max-width:none}
+}
 .prose strong{color:var(--ink);font-weight:500}
 
 .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:24px}
@@ -528,6 +542,7 @@ footer .zh{font-family:var(--font-body);letter-spacing:.02em}
 
     <section id="about">
       <div class="eyebrow"><span class="en">About</span><span class="zh">关于我</span></div>
+      <div class="aboutgrid">
       <p class="lede">
         <span class="en">I work on the probabilities of causation — deriving what counterfactual quantities a dataset can and cannot identify, and how tight those bounds get.</span>
         <span class="zh">我研究因果概率——一份数据究竟能识别出哪些反事实量、识别不出哪些，以及这些界能收紧到什么程度。</span>
@@ -545,6 +560,7 @@ footer .zh{font-family:var(--font-body);letter-spacing:.02em}
           <span class="en">I am glad to hear from people working on identifiability, counterfactual reasoning, or applying causal methods to messy observational data. Email is the fastest way to reach me.</span>
           <span class="zh">欢迎做可识别性、反事实推理，或把因果方法用在杂乱观测数据上的同行来信交流，邮件是最快的联系方式。</span>
         </p>
+      </div>
       </div>
       <div class="tags">
         <span class="tag"><span class="en">Causal Inference</span><span class="zh">因果推断</span></span>
