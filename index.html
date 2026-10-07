@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Xin Shu (舒心) — Ph.D. student in Computer Science at Florida State University, Causal Intelligence Lab. Causal inference, probabilities of causation, identifiability theory.">
+<meta name="author" content="Xin Shu">
+<link rel="canonical" href="https://USERNAME.github.io/">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Xin Shu · Causal Inference">
+<meta property="og:description" content="Ph.D. student in Computer Science at Florida State University, Causal Intelligence Lab. Causal inference, probabilities of causation, identifiability theory.">
+<meta property="og:url" content="https://USERNAME.github.io/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%237a2e3e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='%23fff' text-anchor='middle'%3EX%3C/text%3E%3C/svg%3E">
+<title>Xin Shu · Causal Inference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap">
+<style>
+/* Layout: sticky left identity rail + single reading column, hairline-ruled sections.
+   Accent is FSU garnet with a muted gold hairline; neutrals biased slightly cool. */
+:root{
+  --paper:#f6f6f4;
+  --surface:#fffffe;
+  --ink:#1a1a1d;
+  --ink-soft:#55555d;
+  --ink-faint:#8a8a93;
+  --rule:#deddd7;
+  --rule-soft:#eceae5;
+  --accent:#7a2e3e;
+  --accent-wash:#f1e7e9;
+  --gold:#a2834b;
+  --font-display:"Newsreader",Georgia,"Songti SC",serif;
+  --font-body:"IBM Plex Sans","Noto Sans SC",-apple-system,"Helvetica Neue",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --maxw:1120px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121215;
+    --surface:#1a1a1f;
+    --ink:#ece9e4;
+    --ink-soft:#a3a1a8;
+    --ink-faint:#74727b;
+    --rule:#2c2c34;
+    --rule-soft:#232329;
+    --accent:#d9808f;
+    --accent-wash:#2a1b20;
+    --gold:#c6a469;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121215;
+  --surface:#1a1a1f;
+  --ink:#ece9e4;
+  --ink-soft:#a3a1a8;
+  --ink-faint:#74727b;
+  --rule:#2c2c34;
+  --rule-soft:#232329;
+  --accent:#d9808f;
+  --accent-wash:#2a1b20;
+  --gold:#c6a469;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+
+/* ---- bilingual ---- */
+#page[data-lang="en"] .zh{display:none}
+#page[data-lang="zh"] .en{display:none}
+
+/* ---- shell ---- */
+.shell{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding-inline:28px;
+  padding-block:0;
+  display:grid;
+  grid-template-columns:272px minmax(0,1fr);
+  gap:72px;
+  align-items:start;
+}
+
+/* ---- rail ---- */
+.rail{
+  position:sticky;
+  top:calc(env(safe-area-inset-top, 0px) + 44px);
+  padding-block:56px 40px;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+.mark{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  line-height:1.5;
+}
+.rail h1{
+  font-family:var(--font-display);
+  font-weight:300;
+  font-size:48px;
+  line-height:1;
+  letter-spacing:-.02em;
+}
+.rail h1 .zh{font-family:var(--font-body);font-weight:400;font-size:42px;letter-spacing:.04em}
+.alt{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  letter-spacing:.1em;
+  color:var(--ink-faint);
+  margin-top:8px;
+}
+.role{
+  font-size:14px;
+  color:var(--ink-soft);
+  line-height:1.55;
+}
+.role strong{font-weight:500;color:var(--ink)}
+.labref{
+  display:inline-block;
+  margin-top:5px;
+  text-decoration:none;
+  color:var(--accent);
+  border-bottom:1px solid transparent;
+  transition:border-color .18s ease;
+}
+.labref:hover{border-bottom-color:var(--accent)}
+.railrule{height:1px;background:var(--rule);width:100%}
+
+nav ul{display:flex;flex-direction:column;gap:1px}
+nav a{
+  display:flex;
+  align-items:baseline;
+  gap:11px;
+  text-decoration:none;
+  font-size:14px;
+  color:var(--ink-soft);
+  padding:5px 0;
+  transition:color .18s ease;
+}
+nav a:hover{color:var(--accent)}
+nav a .num{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  color:var(--ink-faint);
+  letter-spacing:.06em;
+}
+
+.contact{display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+.contact .row{display:flex;gap:10px;align-items:baseline}
+.contact .k{
+  font-family:var(--font-mono);
+  font-size:9.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  min-width:50px;
+  flex:none;
+}
+.contact .v{color:var(--ink-soft);word-break:break-word}
+.contact a.v{text-decoration:none;border-bottom:1px solid var(--rule)}
+.contact a.v:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.copy{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  background:none;
+  border:1px solid var(--rule);
+  color:var(--ink-faint);
+  border-radius:3px;
+  padding:1px 6px;
+  cursor:pointer;
+  flex:none;
+  transition:all .18s ease;
+}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.08em;
+  background:none;
+  border:1px solid var(--rule);
+  color:var(--ink-soft);
+  border-radius:999px;
+  padding:4px 11px;
+  cursor:pointer;
+  transition:all .18s ease;
+}
+.sw:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---- main ---- */
+main{padding-block:56px 88px;display:flex;flex-direction:column}
+section{padding-block:42px;border-top:1px solid var(--rule)}
+section:first-child{border-top:none;padding-top:10px}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  margin-bottom:22px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--rule-soft)}
+
+.lede{
+  font-family:var(--font-display);
+  font-weight:300;
+  font-size:28px;
+  line-height:1.38;
+  letter-spacing:-.012em;
+  max-width:30ch;
+  margin-bottom:22px;
+}
+.lede .zh{font-family:var(--font-body);font-weight:300;font-size:25px;line-height:1.58;letter-spacing:.01em}
+.prose{max-width:64ch;display:flex;flex-direction:column;gap:14px;color:var(--ink-soft);font-size:15.5px}
+.prose strong{color:var(--ink);font-weight:500}
+
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:24px}
+.tag{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.03em;
+  border:1px solid var(--rule);
+  color:var(--ink-soft);
+  border-radius:3px;
+  padding:3px 9px;
+}
+.tag .zh{font-family:var(--font-body)}
+
+/* ---- news ---- */
+.news{
+  display:flex;
+  flex-direction:column;
+  border-left:2px solid var(--accent);
+  padding-left:20px;
+}
+.news li{
+  display:grid;
+  grid-template-columns:112px minmax(0,1fr);
+  gap:18px;
+  padding-block:12px;
+  border-bottom:1px solid var(--rule-soft);
+}
+.news li:last-child{border-bottom:none}
+.news .stamp{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--accent);
+  padding-top:3px;
+  font-variant-numeric:tabular-nums;
+}
+.news .txt{font-size:14.5px;color:var(--ink-soft);line-height:1.62}
+.news .txt strong{color:var(--ink);font-weight:500}
+.news .txt .ttl{font-family:var(--font-display);font-size:16px;color:var(--ink)}
+
+/* ---- publications ---- */
+.pubs{display:flex;flex-direction:column}
+.pub{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr);
+  gap:20px;
+  padding-block:20px;
+  border-bottom:1px solid var(--rule-soft);
+}
+.pub:last-child{border-bottom:none}
+.pub .yr{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--ink-faint);
+  font-variant-numeric:tabular-nums;
+  padding-top:5px;
+}
+.pub h3{font-family:var(--font-display);font-weight:400;font-size:19.5px;line-height:1.36}
+.authors{font-size:14px;color:var(--ink-soft);margin-top:6px}
+.authors em{font-style:normal;color:var(--accent);font-weight:500}
+.venue{font-size:13.5px;color:var(--ink-faint);margin-top:4px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.venue i{font-style:italic}
+.badge{
+  font-family:var(--font-mono);
+  font-size:9.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  padding:2px 7px;
+  border-radius:3px;
+  border:1px solid var(--rule);
+}
+.badge.acc{color:var(--accent);background:var(--accent-wash);border-color:transparent}
+.badge.rev{color:var(--ink-faint)}
+.badge .zh{font-family:var(--font-body);letter-spacing:.06em}
+.flag{
+  font-size:13px;
+  color:var(--gold);
+  margin-top:7px;
+  display:flex;
+  gap:8px;
+  align-items:baseline;
+}
+.flag::before{content:"◆";font-size:8px;position:relative;top:-2px}
+
+/* ---- research cards ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft)}
+.card{
+  background:var(--surface);
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  min-width:0;
+}
+.card .kind{
+  font-family:var(--font-mono);
+  font-size:9.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.card .kind .zh{font-family:var(--font-body);letter-spacing:.08em}
+.card h3{font-size:16.5px;font-weight:500;line-height:1.38}
+.card p{font-size:14px;color:var(--ink-soft);line-height:1.62}
+
+/* ---- timeline ---- */
+.tl{display:flex;flex-direction:column}
+.tl li{
+  display:grid;
+  grid-template-columns:132px minmax(0,1fr);
+  gap:24px;
+  padding-block:20px;
+  border-bottom:1px solid var(--rule-soft);
+}
+.tl li:last-child{border-bottom:none}
+.when{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--ink-faint);
+  letter-spacing:.01em;
+  font-variant-numeric:tabular-nums;
+  padding-top:4px;
+}
+.what h3{font-size:16.5px;font-weight:500;line-height:1.4}
+.what h3 .deg{font-weight:400;color:var(--ink-soft)}
+.where{font-size:13.5px;color:var(--ink-faint);margin-top:3px}
+.bullets{margin-top:10px;display:flex;flex-direction:column;gap:7px;max-width:62ch}
+.bullets li{
+  display:grid;
+  grid-template-columns:14px minmax(0,1fr);
+  font-size:14.5px;
+  color:var(--ink-soft);
+  line-height:1.6;
+  padding:0;
+  border:none;
+  gap:0;
+}
+.bullets li::before{content:"–";color:var(--ink-faint)}
+.bullets strong{color:var(--ink);font-weight:500}
+
+/* ---- skills ---- */
+.skills{display:flex;flex-direction:column}
+.skill{
+  display:grid;
+  grid-template-columns:190px minmax(0,1fr);
+  gap:24px;
+  padding-block:16px;
+  border-bottom:1px solid var(--rule-soft);
+}
+.skill:last-child{border-bottom:none}
+.skill dt{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  padding-top:4px;
+}
+.skill dt .zh{font-family:var(--font-body);letter-spacing:.06em;font-size:12px}
+.skill dd{margin:0;font-size:14.5px;color:var(--ink-soft);line-height:1.65}
+
+/* ---- footer ---- */
+footer{
+  border-top:1px solid var(--rule);
+  padding-block:26px 8px;
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.06em;
+  color:var(--ink-faint);
+}
+footer .zh{font-family:var(--font-body);letter-spacing:.02em}
+
+/* ---- mobile ---- */
+@media (max-width:880px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:0;padding-inline:20px}
+  .rail{position:static;padding-block:42px 26px;gap:20px}
+  .rail h1{font-size:40px}
+  .rail h1 .zh{font-size:36px}
+  nav ul{flex-direction:row;flex-wrap:wrap;gap:4px 18px}
+  nav a{padding:2px 0}
+  main{padding-block:0 60px}
+  section{padding-block:34px}
+  .lede{font-size:23px}
+  .lede .zh{font-size:21px}
+  .tl li,.skill,.news li{grid-template-columns:minmax(0,1fr);gap:5px}
+  .news{padding-left:16px}
+  .news .stamp{padding-top:0}
+  .when,.skill dt{padding-top:0}
+  .pub{grid-template-columns:minmax(0,1fr);gap:5px}
+  .pub .yr{padding-top:0}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+</style>
+<style>
+/* base reset */
+:root{
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top, 0px);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+}
+html,body{margin:0}
+body{font:14px system-ui,-apple-system,sans-serif;background:#f6f6f4}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div id="page" data-lang="en">
+<div class="shell">
+
+  <aside class="rail">
+    <div class="mark">Florida State University<br>Causal Intelligence Lab</div>
+    <div>
+      <h1>
+        <span class="en">Xin Shu</span>
+        <span class="zh">舒心</span>
+      </h1>
+      <div class="alt">
+        <span class="en">舒心</span>
+        <span class="zh">Xin Shu</span>
+      </div>
+    </div>
+    <div class="role">
+      <span class="en"><strong>Ph.D. Student, Computer Science</strong><br>Florida State University · Tallahassee, FL<br><a class="labref" href="https://www.causalds.org/home" target="_blank" rel="noopener">Causal Intelligence Lab (CIL)</a></span>
+      <span class="zh"><strong>计算机科学 博士研究生</strong><br>佛罗里达州立大学 · 塔拉哈西<br><a class="labref" href="https://www.causalds.org/home" target="_blank" rel="noopener">因果智能实验室 CIL</a></span>
+    </div>
+
+    <div class="railrule"></div>
+
+    <nav>
+      <ul>
+        <li><a href="#news"><span class="num">01</span><span class="en">News</span><span class="zh">最新动态</span></a></li>
+        <li><a href="#about"><span class="num">02</span><span class="en">About</span><span class="zh">关于我</span></a></li>
+        <li><a href="#publications"><span class="num">03</span><span class="en">Publications</span><span class="zh">论文发表</span></a></li>
+        <li><a href="#research"><span class="num">04</span><span class="en">Research</span><span class="zh">研究工作</span></a></li>
+        <li><a href="#experience"><span class="num">05</span><span class="en">Experience</span><span class="zh">项目与工作经历</span></a></li>
+        <li><a href="#education"><span class="num">06</span><span class="en">Education</span><span class="zh">教育背景</span></a></li>
+        <li><a href="#skills"><span class="num">07</span><span class="en">Skills</span><span class="zh">专业技能</span></a></li>
+      </ul>
+    </nav>
+
+    <div class="railrule"></div>
+
+    <div class="contact">
+      <div class="row">
+        <span class="k">Email</span>
+        <span class="v" id="mailText">xs24a@fsu.edu</span>
+        <button class="copy" id="copyMail" type="button">copy</button>
+      </div>
+      <div class="row">
+        <span class="k">LinkedIn</span>
+        <a class="v" href="https://linkedin.com/in/xinshux" target="_blank" rel="noopener">in/xinshux</a>
+      </div>
+      <div class="row">
+        <span class="k"><span class="en">Based in</span><span class="zh">所在地</span></span>
+        <span class="v">Tallahassee, FL, USA</span>
+      </div>
+    </div>
+
+    <div class="switches">
+      <button class="sw" id="langBtn" type="button">中文</button>
+      <button class="sw" id="themeBtn" type="button">Dark</button>
+    </div>
+  </aside>
+
+  <main>
+
+    <section id="news">
+      <div class="eyebrow"><span class="en">News</span><span class="zh">最新动态</span></div>
+      <ul class="news">
+        <li>
+          <div class="stamp">2026.04.29</div>
+          <div class="txt">
+            <span class="en"><strong>IJCAI-ECAI 2026</strong> — paper accepted: <span class="ttl">Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</span>, first author.</span>
+            <span class="zh"><strong>IJCAI-ECAI 2026</strong> 论文接收：<span class="ttl">Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</span>，第一作者。</span>
+          </div>
+        </li>
+        <li>
+          <div class="stamp">2026.01.22</div>
+          <div class="txt">
+            <span class="en"><strong>AISTATS 2026</strong> — paper accepted: <span class="ttl">ε-Identifiability of Causal Quantities</span>, co-authored with Judea Pearl.</span>
+            <span class="zh"><strong>AISTATS 2026</strong> 论文接收：<span class="ttl">ε-Identifiability of Causal Quantities</span>，合作者含 Judea Pearl。</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section id="about">
+      <div class="eyebrow"><span class="en">About</span><span class="zh">关于我</span></div>
+      <p class="lede">
+        <span class="en">I work on the probabilities of causation — deriving what counterfactual quantities a dataset can and cannot identify, and how tight those bounds get.</span>
+        <span class="zh">我研究因果概率——一份数据究竟能识别出哪些反事实量、识别不出哪些，以及这些界能收紧到什么程度。</span>
+      </p>
+      <div class="prose">
+        <p>
+          <span class="en">I am a Ph.D. student in Computer Science at <strong>Florida State University</strong>, in the <a class="labref" href="https://www.causalds.org/home" target="_blank" rel="noopener">Causal Intelligence Lab</a>, working on causal inference since 2024. My thesis work derives <strong>closed-form expressions for PNS, PS and PN</strong> in multivariate settings and proves those forms complete, and establishes <strong>ε-identifiability conditions</strong> for causal effects, ETT, PN and PS under weak structural assumptions.</span>
+          <span class="zh">我在<strong>佛罗里达州立大学</strong><a class="labref" href="https://www.causalds.org/home" target="_blank" rel="noopener">因果智能实验室（CIL）</a>攻读计算机科学博士，自 2024 年起从事因果推断研究。论文工作的两条主线是：在多变量场景下推导 <strong>PNS、PS、PN 的闭式表达式</strong>并证明其完备性；以及在弱结构假设下建立因果效应、ETT、PN 与 PS 的 <strong>ε-可识别性条件</strong>。</span>
+        </p>
+        <p>
+          <span class="en">The work has appeared at <strong>IJCAI</strong> and <strong>AISTATS</strong>, the latter co-authored with Turing Award laureate <strong>Judea Pearl</strong>. Before the Ph.D. I spent two years doing quantitative and behavioral modeling at Columbia and in industry, which is where the interest in <strong>high-noise, real-world business settings</strong> comes from: identification theory is only useful if it survives contact with data that was never designed for it.</span>
+          <span class="zh">相关成果发表于 <strong>IJCAI</strong> 与 <strong>AISTATS</strong>，后者与图灵奖得主 <strong>Judea Pearl</strong> 合作完成。读博之前，我在哥伦比亚大学和业界做了两年定量与行为建模，对<strong>高噪声的真实业务场景</strong>的兴趣正来自那段经历：识别理论只有在面对并非为它而生的数据时仍然站得住，才真正有用。</span>
+        </p>
+        <p>
+          <span class="en">I am glad to hear from people working on identifiability, counterfactual reasoning, or applying causal methods to messy observational data. Email is the fastest way to reach me.</span>
+          <span class="zh">欢迎做可识别性、反事实推理，或把因果方法用在杂乱观测数据上的同行来信交流，邮件是最快的联系方式。</span>
+        </p>
+      </div>
+      <div class="tags">
+        <span class="tag"><span class="en">Causal Inference</span><span class="zh">因果推断</span></span>
+        <span class="tag"><span class="en">Probabilities of Causation</span><span class="zh">因果概率</span></span>
+        <span class="tag"><span class="en">Counterfactual Reasoning</span><span class="zh">反事实推理</span></span>
+        <span class="tag"><span class="en">Identifiability Theory</span><span class="zh">可识别性理论</span></span>
+        <span class="tag"><span class="en">Machine Learning</span><span class="zh">机器学习</span></span>
+      </div>
+    </section>
+
+    <section id="publications">
+      <div class="eyebrow"><span class="en">Publications</span><span class="zh">论文发表</span></div>
+      <div class="pubs">
+
+        <article class="pub">
+          <div class="yr">2026</div>
+          <div>
+            <h3>Identification of Probabilities of Causation: From Recursive to Closed-Form Bounds</h3>
+            <div class="authors"><em>X. Shu</em>, S. Wang, A. Li</div>
+            <div class="venue">
+              <i><span class="en">IJCAI-ECAI 2026, pp. 4063–4070</span><span class="zh">IJCAI-ECAI 2026，第 4063–4070 页</span></i>
+              <span class="badge acc"><span class="en">Accepted</span><span class="zh">已接收</span></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="yr">2026</div>
+          <div>
+            <h3>ε-Identifiability of Causal Quantities</h3>
+            <div class="authors">A. Li, S. Mueller, <em>X. Shu</em>, J. Pearl</div>
+            <div class="venue">
+              <i><span class="en">AISTATS 2026, PMLR Vol. 300, pp. 4978–4986</span><span class="zh">AISTATS 2026，PMLR 第 300 卷，第 4978–4986 页</span></i>
+              <span class="badge acc"><span class="en">Accepted</span><span class="zh">已接收</span></span>
+            </div>
+            <div class="flag">
+              <span class="en">Co-authored with Turing Award laureate Judea Pearl</span>
+              <span class="zh">合作者含图灵奖得主 Judea Pearl</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="yr">2027</div>
+          <div>
+            <h3>General Probabilities of Causation with Causal Knowledge</h3>
+            <div class="authors"><em>X. Shu</em>, Z. Lei, A. Li</div>
+            <div class="venue">
+              <i>AAAI 2027</i>
+              <span class="badge rev"><span class="en">Under Review</span><span class="zh">审稿中</span></span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="research">
+      <div class="eyebrow"><span class="en">Research · Florida State University, 2024 — Present</span><span class="zh">研究工作 · 佛罗里达州立大学，2024 年 9 月至今</span></div>
+      <div class="grid">
+
+        <article class="card">
+          <div class="kind"><span class="en">Theory</span><span class="zh">理论</span></div>
+          <h3><span class="en">Closed-Form Probabilities of Causation</span><span class="zh">因果概率的闭式刻画</span></h3>
+          <p>
+            <span class="en">Derived closed-form expressions for PNS, PS and PN in multivariate settings, replacing the recursive bounds previously used, and proved the derived forms complete.</span>
+            <span class="zh">在多变量场景下推导出 PNS、PS、PN 的闭式表达式，取代此前使用的递归界，并证明了这些表达式的完备性。</span>
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="kind"><span class="en">Theory</span><span class="zh">理论</span></div>
+          <h3><span class="en">ε-Identifiability Conditions</span><span class="zh">ε-可识别性条件</span></h3>
+          <p>
+            <span class="en">Established ε-identifiability conditions for causal effects, ETT, PN and PS under weak structural assumptions, widening the set of questions answerable from observational data alone.</span>
+            <span class="zh">在弱结构假设下建立了因果效应、ETT、PN 与 PS 的 ε-可识别性条件，扩大了仅凭观测数据即可回答的问题范围。</span>
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="kind"><span class="en">Modeling</span><span class="zh">建模</span></div>
+          <h3><span class="en">SCMs for Neural Signals</span><span class="zh">神经信号的结构因果模型</span></h3>
+          <p>
+            <span class="en">Built structural causal models characterizing causal relationships between brain regions from neural electrophysiological recordings.</span>
+            <span class="zh">基于神经电生理信号构建结构因果模型，刻画脑区之间的因果关系。</span>
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="kind"><span class="en">Validation</span><span class="zh">验证</span></div>
+          <h3><span class="en">Simulation &amp; Empirical Pipelines</span><span class="zh">仿真与实证流程</span></h3>
+          <p>
+            <span class="en">Implemented simulation and empirical analysis pipelines in Python to verify the theoretical results against generated and observed data.</span>
+            <span class="zh">用 Python 实现仿真与实证分析流程，在生成数据与真实数据上验证理论结果的正确性。</span>
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="eyebrow"><span class="en">Projects &amp; Experience</span><span class="zh">项目与工作经历</span></div>
+      <ul class="tl">
+
+        <li>
+          <div class="when">2022.11 — 2023.12</div>
+          <div class="what">
+            <h3><span class="en">Quantitative Research &amp; Behavioral Modeling</span><span class="zh">定量研究与行为建模项目</span></h3>
+            <div class="where"><span class="en">Columbia University · New York, NY</span><span class="zh">哥伦比亚大学 · 纽约</span></div>
+            <ul class="bullets">
+              <li><span class="en">Applied <strong>logistic regression</strong> to automobile sales data to predict optimal pricing and key drivers, projecting a <strong>13.2% sales lift</strong>; used multi-scenario simulation to model customer behavior and evaluate hotel <strong>overbooking strategies</strong>, projecting a <strong>5.4% revenue increase</strong>.</span><span class="zh">对汽车销售数据应用<strong>逻辑回归</strong>预测最优定价与关键影响因子，销量预计提升 <strong>13.2%</strong>；通过多场景仿真建模顾客行为，评估酒店<strong>超订策略</strong>的风险与收益，收入预计提升 <strong>5.4%</strong>。</span></li>
+              <li><span class="en">Analyzed NYC Uber and taxi data with <strong>A/B testing</strong> and linear regression (SQL, statsmodels), proposing pricing recommendations based on trip frequency, peak hours and weather.</span><span class="zh">基于 <strong>A/B 实验</strong>与线性回归（SQL、statsmodels）分析纽约 Uber 与出租车数据，结合出行频次、高峰时段与天气维度提出定价建议。</span></li>
+              <li><span class="en">Evaluated U.S. foreign labor visa data, achieving a regression MAE of <strong>$10,700</strong> and random forest / KNN accuracy of <strong>96.1% / 91.0%</strong>.</span><span class="zh">评估美国外籍劳工签证数据，回归分析 MAE 为 <strong>$10,700</strong>，随机森林与 KNN 准确率分别为 <strong>96.1% / 91.0%</strong>。</span></li>
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <div class="when">2024.06 — 2024.08</div>
+          <div class="what">
+            <h3><span class="en">Business Analyst</span><span class="zh">商业分析师</span></h3>
+            <div class="where">Virufy · San Francisco, CA</div>
+            <ul class="bullets">
+              <li><span class="en">Partnered with stakeholders to define analytical requirements and acceptance criteria, translating ambiguous requests into actionable tasks and reusable documentation.</span><span class="zh">与业务方协作明确分析需求与验收标准，将模糊诉求转化为可执行任务，并沉淀为可复用文档。</span></li>
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <div class="when">2024.03 — 2024.06</div>
+          <div class="what">
+            <h3><span class="en">Data Analyst</span><span class="zh">数据分析师</span></h3>
+            <div class="where">Spark Education Group · San Francisco, CA</div>
+            <ul class="bullets">
+              <li><span class="en">Led <strong>data collection and attribution analysis</strong> across trial-class bookings and acquisition channels, identifying bottlenecks in the trial-to-paid funnel and high-value channels.</span><span class="zh">主导试听课预约与各获客渠道的<strong>数据采集与归因分析</strong>，定位从试听到付费链路中的转化瓶颈与高价值渠道。</span></li>
+              <li><span class="en">Independently handled trial-class conversion and sales closing; distilled parents' decision barriers from frontline interactions into <strong>qualitative evidence</strong> for strategy design.</span><span class="zh">独立承接试听课转化与销售成单，从一线接触中归纳家长决策障碍，为策略设计提供<strong>定性依据</strong>。</span></li>
+              <li><span class="en">Designed and launched a referral mechanism as a <strong>behavioral intervention</strong>, driving May course purchases and enrollments to <strong>exceed March and April combined</strong>; contributed to a <strong>23% increase</strong> in the company's monthly performance metrics.</span><span class="zh">基于上述洞察设计并落地推荐机制这一<strong>行为干预</strong>，推动 5 月课程购买量与报名量<strong>超过 3、4 月之和</strong>，助力公司月度业绩指标提升 <strong>23%</strong>。</span></li>
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <div class="when">2023.06 — 2023.09</div>
+          <div class="what">
+            <h3><span class="en">Data Analyst Intern</span><span class="zh">数据分析实习生</span></h3>
+            <div class="where"><span class="en">Nongfu Spring · Remote</span><span class="zh">农夫山泉 · 远程</span></div>
+            <ul class="bullets">
+              <li><span class="en">Integrated sales, procurement and inventory data to model regional beverage sales, identifying regional differences and anomalies through <strong>3D visualizations</strong> and structured reports.</span><span class="zh">整合销售、采购、库存三类业务数据对饮料区域销售建模，以 <strong>3D 可视化</strong>与结构化报告定位区域差异与异常。</span></li>
+              <li><span class="en">Translated findings into product ordering and regional sales strategy recommendations, directly supporting subsequent ordering and distribution decisions.</span><span class="zh">将分析结论转化为产品订货与区域销售策略建议，直接支撑后续订货与铺货决策。</span></li>
+              <li><span class="en">Worked with senior business staff to incorporate frontline domain expertise, improving the actionability of analytical conclusions.</span><span class="zh">与资深业务成员协作整合一线领域经验，提升分析结论的业务可落地性。</span></li>
+            </ul>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+    <section id="education">
+      <div class="eyebrow"><span class="en">Education</span><span class="zh">教育背景</span></div>
+      <ul class="tl">
+        <li>
+          <div class="when"><span class="en">Expected 2028</span><span class="zh">预计 2028 毕业</span></div>
+          <div class="what">
+            <h3><span class="en">Ph.D., <span class="deg">Computer Science</span></span><span class="zh">计算机科学 <span class="deg">博士</span></span></h3>
+            <div class="where"><span class="en">Florida State University · Tallahassee, FL</span><span class="zh">佛罗里达州立大学 · 塔拉哈西</span></div>
+          </div>
+        </li>
+        <li>
+          <div class="when">2022.09 — 2024.02</div>
+          <div class="what">
+            <h3><span class="en">M.S., <span class="deg">Industrial Engineering &amp; Operations Research</span></span><span class="zh">工业工程与运筹学 <span class="deg">硕士</span></span></h3>
+            <div class="where"><span class="en">Columbia University · New York, NY</span><span class="zh">哥伦比亚大学 · 纽约</span></div>
+          </div>
+        </li>
+        <li>
+          <div class="when">2019.09 — 2022.06</div>
+          <div class="what">
+            <h3><span class="en">B.Sc., <span class="deg">Mathematics</span></span><span class="zh">数学 <span class="deg">学士</span></span></h3>
+            <div class="where"><span class="en">University College London · London, UK</span><span class="zh">伦敦大学学院 · 伦敦</span></div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section id="skills">
+      <div class="eyebrow"><span class="en">Skills</span><span class="zh">专业技能</span></div>
+      <dl class="skills">
+        <div class="skill">
+          <dt><span class="en">Causal Inference &amp; Experimentation</span><span class="zh">因果推断与实验方法</span></dt>
+          <dd>
+            <span class="en">Probabilities of causation (PNS / PS / PN), identifiability and closed-form bounds, structural causal models (SCM), A/B test design and analysis, regression analysis, field observation and qualitative insights</span>
+            <span class="zh">因果概率（PNS / PS / PN）、可识别性与闭式界、结构因果模型（SCM）、A/B 实验设计与分析、回归分析、现场观察与定性洞察</span>
+          </dd>
+        </div>
+        <div class="skill">
+          <dt><span class="en">Statistics &amp; Machine Learning</span><span class="zh">统计与机器学习</span></dt>
+          <dd>Logistic regression, random forest, KNN, statsmodels, Scikit-learn, NumPy, Pandas, Matplotlib</dd>
+        </div>
+        <div class="skill">
+          <dt><span class="en">Data &amp; Tools</span><span class="zh">数据与工具</span></dt>
+          <dd><span class="en">Python, SQL, BeautifulSoup (web scraping), R, Java, C++, Excel, AWS, Power BI, Tableau</span><span class="zh">Python、SQL、BeautifulSoup（数据采集）、R、Java、C++、Excel、AWS、Power BI、Tableau</span></dd>
+        </div>
+      </dl>
+    </section>
+
+    <footer>
+      <span>© 2026 Xin Shu · Florida State University</span>
+      <span><span class="en">Last updated October 2026</span><span class="zh">最近更新 2026 年 10 月</span></span>
+    </footer>
+
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var page = document.getElementById('page');
+  var langBtn = document.getElementById('langBtn');
+  var themeBtn = document.getElementById('themeBtn');
+
+  function readStore(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+  function writeStore(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+
+  function setLang(l){
+    page.setAttribute('data-lang', l);
+    langBtn.textContent = (l === 'en') ? '中文' : 'EN';
+    writeStore('xinshu-lang', l);
+  }
+  setLang(readStore('xinshu-lang') === 'zh' ? 'zh' : 'en');
+  langBtn.addEventListener('click', function(){
+    setLang(page.getAttribute('data-lang') === 'en' ? 'zh' : 'en');
+  });
+
+  function systemDark(){
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function setTheme(t){
+    document.documentElement.setAttribute('data-theme', t);
+    themeBtn.textContent = (t === 'dark') ? 'Light' : 'Dark';
+    writeStore('xinshu-theme', t);
+  }
+  var stored = readStore('xinshu-theme');
+  setTheme((stored === 'dark' || stored === 'light') ? stored : (systemDark() ? 'dark' : 'light'));
+  themeBtn.addEventListener('click', function(){
+    setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  var copyBtn = document.getElementById('copyMail');
+  var mailText = document.getElementById('mailText');
+  copyBtn.addEventListener('click', function(){
+    var done = function(){
+      copyBtn.textContent = 'copied';
+      setTimeout(function(){ copyBtn.textContent = 'copy'; }, 1600);
+    };
+    var select = function(){
+      try {
+        var r = document.createRange();
+        r.selectNodeContents(mailText);
+        var s = window.getSelection();
+        s.removeAllRanges();
+        s.addRange(r);
+        copyBtn.textContent = 'select';
+        setTimeout(function(){ copyBtn.textContent = 'copy'; }, 1600);
+      } catch(e){}
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText('xs24a@fsu.edu').then(done, select);
+    } else { select(); }
+  });
+
+  document.querySelectorAll('nav a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(ev){
+      var t = document.querySelector(a.getAttribute('href'));
+      if (!t) return;
+      ev.preventDefault();
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      t.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+    });
+  });
+})();
+</script>
+</body>
+</html>
